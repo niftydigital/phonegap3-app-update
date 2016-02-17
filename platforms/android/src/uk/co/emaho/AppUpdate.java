@@ -18,6 +18,7 @@ package uk.co.emaho;
     import java.io.OutputStream;
     import java.net.URL;
     import java.net.URLConnection;
+    import android.webkit.WebView;
 
     /**
      * This class echoes a string called from JavaScript.
@@ -33,7 +34,16 @@ package uk.co.emaho;
             if (action.equals("update")) {
                 String urlString = args.getString(0);
                 new DownloadFileAsync().execute(urlString);
-                this.webView.reload();
+                
+                // Reload
+                WebView view;
+
+                try {
+                    view = (WebView) webView;
+                } catch(ClassCastException ce) {  // cordova-android 4.0+
+                    view = (WebView) webView.getView();
+                }
+                view.reload();
 
                 return true;
             }
@@ -137,7 +147,14 @@ package uk.co.emaho;
                 unzip.unzip();
 
                 // reload new index page
-                AppUpdate.this.webView.reload();
+                WebView view;
+
+                try {
+                    view = (WebView) webView;
+                } catch(ClassCastException ce) {  // cordova-android 4.0+
+                    view = (WebView) webView.getView();
+                }
+                view.reload();
             }
         }
     }
